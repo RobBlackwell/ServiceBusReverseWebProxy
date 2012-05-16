@@ -17,7 +17,7 @@ namespace Microsoft.Samples.ServiceBusReverseWebProxy
         /// </summary>
         static void Main(string[] args)
         {
-            bool runOnConsole = false;
+            bool runOnConsole = true;
             bool showHelp = false;
 
             try
@@ -28,12 +28,12 @@ namespace Microsoft.Samples.ServiceBusReverseWebProxy
                     Console.WriteLine("Missing section 'reverseWebProxy' in configuration file.");
                     return;
                 }
-                else if (string.IsNullOrEmpty(Settings.ProjectName))
+                else if (string.IsNullOrEmpty(Settings.ServiceNamespace))
                 {
                     Console.WriteLine("Configuration attribute 'netServiceProjectName' is not set or empty.");
                     return;
                 }
-                else if (string.IsNullOrEmpty(Settings.ProjectPassword))
+                else if (string.IsNullOrEmpty(Settings.IssuerName))
                 {
                     Console.WriteLine("Configuration attribute 'netServiceProjectPassword' is not set or empty.");
                     return;
@@ -43,7 +43,7 @@ namespace Microsoft.Samples.ServiceBusReverseWebProxy
             {
                 Console.WriteLine("Configuration exception: {0}", ce.Message);
                 return;
-            }            
+            }
 
             for (int i = 0; i < args.Length; i++)
             {
@@ -104,7 +104,7 @@ namespace Microsoft.Samples.ServiceBusReverseWebProxy
                     new ServiceBusReverseWebProxy() 
                 };
                 ServiceBase.Run(ServicesToRun);
-            }            
+            }
         }
     }
 }

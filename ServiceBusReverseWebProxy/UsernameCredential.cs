@@ -10,12 +10,10 @@ namespace Microsoft.Samples.ServiceBusReverseWebProxy
     {
         TransportClientEndpointBehavior credentials;
 
-        public UsernameCredential(string username, string password)
+        public UsernameCredential(string issuerName, string issuerSecret)
         {
             credentials = new TransportClientEndpointBehavior();
-            credentials.CredentialType = TransportClientCredentialType.UserNamePassword;
-            credentials.Credentials.UserName.UserName = username;
-            credentials.Credentials.UserName.Password = password;
+            credentials.TokenProvider = TokenProvider.CreateSharedSecretTokenProvider(issuerName, issuerSecret);
         }
 
         public static implicit operator TransportClientEndpointBehavior(UsernameCredential c)

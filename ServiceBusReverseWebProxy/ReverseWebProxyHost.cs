@@ -14,7 +14,7 @@ namespace Microsoft.Samples.ServiceBusReverseWebProxy
     {
         List<ReverseWebProxy> reverseWebProxies;
         ServiceHost policyHost;
- 
+
         public ReverseWebProxyHost()
         {
             reverseWebProxies = new List<ReverseWebProxy>();
@@ -23,8 +23,8 @@ namespace Microsoft.Samples.ServiceBusReverseWebProxy
         public void Open()
         {
             UsernameCredential usernameCredential = new UsernameCredential(
-                Program.Settings.ProjectName,
-                Program.Settings.ProjectPassword);
+                Program.Settings.IssuerName,
+                Program.Settings.IssuerSecret);
 
             foreach (PathMappingElement pathMapping in Program.Settings.PathMappings)
             {
@@ -34,8 +34,8 @@ namespace Microsoft.Samples.ServiceBusReverseWebProxy
                 {
                     serviceBusPath = serviceBusPath + "/";
                 }
-                
-                Uri proxyListenerUri = ServiceBusEnvironment.CreateServiceUri("http", Program.Settings.ProjectName, serviceBusPath);
+
+                Uri proxyListenerUri = ServiceBusEnvironment.CreateServiceUri("http", Program.Settings.ServiceNamespace, serviceBusPath);
                 string localUri = pathMapping.LocalUri;
                 if (!localUri.EndsWith("/"))
                 {
@@ -50,13 +50,12 @@ namespace Microsoft.Samples.ServiceBusReverseWebProxy
             {
                 proxy.Open();
             }
-        
+
             try
             {
                 if (Program.Settings.EnableSilverlightPolicy)
                 {
-                    policyHost = new PolicyServiceHost(Program.Settings.ProjectName,
-                                                       Program.Settings.ProjectPassword);
+                    policyHost = new PolicyServiceHost(Program.Settings.ServiceNamespace, Program.Settings.IssuerName, Program.Settings.IssuerSecret);
                     policyHost.Open();
                 }
             }
@@ -72,7 +71,7 @@ namespace Microsoft.Samples.ServiceBusReverseWebProxy
                     {
                         // absorb error
                     }
-                } 
+                }
                 throw;
             }
         }

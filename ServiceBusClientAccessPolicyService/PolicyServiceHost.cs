@@ -10,29 +10,29 @@ namespace Microsoft.Samples.ClientAccessPolicyService
 
     public class PolicyServiceHost : ServiceHost
     {
-        string solutionName;
-        string solutionPassword;
+        string issuerName;
+        string issuerSecret;
+        string serviceNameSpace;
 
-        public PolicyServiceHost(string solutionName, string solutionPassword)
+        public PolicyServiceHost(string serviceNameSpace, string issuerName, string issuerSecret)
             : base(typeof(PolicyService))
         {
-            this.solutionName = solutionName;
-            this.solutionPassword = solutionPassword;
+            this.serviceNameSpace = serviceNameSpace;
+            this.issuerName = issuerName;
+            this.issuerSecret = issuerSecret;
         }
 
         protected override void InitializeRuntime()
         {
             TransportClientEndpointBehavior credentials = new TransportClientEndpointBehavior();
-            credentials.CredentialType = TransportClientCredentialType.UserNamePassword;
-            credentials.Credentials.UserName.UserName = this.solutionName;
-            credentials.Credentials.UserName.Password = this.solutionPassword;
+            credentials.TokenProvider = TokenProvider.CreateSharedSecretTokenProvider(issuerName, issuerSecret);
 
             var policyBinding = new WebHttpRelayBinding(EndToEndWebHttpSecurityMode.None, RelayClientAuthenticationType.None);
-            var clientAccessPolicyXml = AddServiceEndpoint(typeof(IClientAccessPolicyXml), policyBinding, ServiceBusEnvironment.CreateServiceUri("http", this.solutionName, "ClientAccessPolicy.xml"));
+            var clientAccessPolicyXml = AddServiceEndpoint(typeof(IClientAccessPolicyXml), policyBinding, ServiceBusEnvironment.CreateServiceUri("http", this.serviceNameSpace, "ClientAccessPolicy.xml"));
             clientAccessPolicyXml.Behaviors.Add(credentials);
-            var crossDomainXml = AddServiceEndpoint(typeof(ICrossDomainXml), policyBinding, ServiceBusEnvironment.CreateServiceUri("http", this.solutionName, "crossdomain.xml"));
+            var crossDomainXml = AddServiceEndpoint(typeof(ICrossDomainXml), policyBinding, ServiceBusEnvironment.CreateServiceUri("http", this.serviceNameSpace, "crossdomain.xml"));
             crossDomainXml.Behaviors.Add(credentials);
-           
+
             base.InitializeRuntime();
         }
     }

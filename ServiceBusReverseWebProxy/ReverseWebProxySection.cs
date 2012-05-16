@@ -9,29 +9,42 @@ namespace Microsoft.Samples.ServiceBusReverseWebProxy
 
     class ReverseWebProxySection : ConfigurationSection
     {
-        [ConfigurationProperty("netServicesProjectName", DefaultValue = null, IsRequired = true)]
-        public string ProjectName
+        [ConfigurationProperty("serviceNamespace", DefaultValue = null, IsRequired = true)]
+        public string ServiceNamespace
         {
             get
             {
-                return (string)this["netServicesProjectName"];
+                return (string)this["serviceNamespace"];
             }
             set
             {
-                this["netServicesProjectName"] = value;
+                this["serviceNamespace"] = value;
             }
         }
 
-        [ConfigurationProperty("netServicesProjectPassword", DefaultValue = null, IsRequired = true)]
-        public string ProjectPassword
+        [ConfigurationProperty("issuerName", DefaultValue = null, IsRequired = true)]
+        public string IssuerName
         {
             get
             {
-                return (string)this["netServicesProjectPassword"];
+                return (string)this["issuerName"];
             }
             set
             {
-                this["netServicesProjectPassword"] = value;
+                this["issuerName"] = value;
+            }
+        }
+
+        [ConfigurationProperty("issuerSecret", DefaultValue = null, IsRequired = true)]
+        public string IssuerSecret
+        {
+            get
+            {
+                return (string)this["issuerSecret"];
+            }
+            set
+            {
+                this["issuerSecret"] = value;
             }
         }
 
@@ -47,7 +60,7 @@ namespace Microsoft.Samples.ServiceBusReverseWebProxy
                 this["enableSilverlightPolicy"] = value;
             }
         }
-        
+
         [ConfigurationProperty("pathMappings", IsDefaultCollection = false)]
         [ConfigurationCollection(typeof(PathMappingCollection),
             AddItemName = "add", ClearItemsName = "clear", RemoveItemName = "remove")]
@@ -61,7 +74,7 @@ namespace Microsoft.Samples.ServiceBusReverseWebProxy
             }
         }
     }
-    
+
     public class PathMappingCollection : ConfigurationElementCollection
     {
         public PathMappingCollection()

@@ -165,7 +165,11 @@ namespace Microsoft.Samples.ServiceBusReverseWebProxy
                     }
                     downstreamRequest.AllowAutoRedirect = false;
                     downstreamRequest.KeepAlive = true;
-                    downstreamRequest.SendChunked = true;
+
+                    if (downstreamRequest.Method == "POST")
+                    {
+                        downstreamRequest.SendChunked = true;
+                    }
                     
                     int cl;
                     if (rm.SuppressEntityBody ||
